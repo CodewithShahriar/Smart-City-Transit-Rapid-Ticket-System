@@ -45,7 +45,7 @@ class StationNetwork {
     private static final Map<String, Integer> metroStations = new HashMap<>();
 
     static {
-        // ঢাকা মেট্রোর মতো রিয়েল স্টেশন ও ডিস্টেন্স ইনডেক্স (KM)
+        
         metroStations.put("Uttara North", 0);
         metroStations.put("Uttara Center", 2);
         metroStations.put("Pallabi", 5);
@@ -79,7 +79,7 @@ class Bus extends Vehicle {
     public Bus() { super("AC City Bus"); }
     @Override
     public double calculateFare(double distance) {
-        return Math.max(20.0, distance * 5.0); // সর্বনিম্ন ২০ টাকা
+        return Math.max(20.0, distance * 5.0); 
     }
 }
 
@@ -87,13 +87,13 @@ class MetroRail extends Vehicle {
     public MetroRail() { super("Rapid Metro Rail"); }
     @Override
     public double calculateFare(double distance) {
-        return 20.0 + (distance * 3.5); // বেস ফেয়ার ২০ + ৩.৫/কিমি
+        return 20.0 + (distance * 3.5); 
     }
 }
 
 // --- 4. Realistic Visual GUI ---
 public class SmartTransportApp extends JFrame {
-    private SmartCard userCard = new SmartCard("MRT-883921", 150.0, "1234"); // PIN: 1234
+    private SmartCard userCard = new SmartCard("MRT-883921", 150.0, "1234"); 
 
     private JLabel balanceLabel, cardIdLabel;
     private JComboBox<String> startStationBox, endStationBox, transportBox;
