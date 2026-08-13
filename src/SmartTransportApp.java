@@ -15,10 +15,62 @@ import java.util.HashMap;
 import java.util.Map;
 
 // --- 1. OOP Core: Route Registry & Transport Models ---
+abstract class Vehicle {
+    private String name;
+    private int totalSeats;
+    private int availableSeats;
+
+    public Vehicle(String name, int totalSeats, int availableSeats) {
+        this.name = name;
+        this.totalSeats = totalSeats;
+        this.availableSeats = availableSeats;
+    }
+
+    public String getName() { return name; }
+    public int getTotalSeats() { return totalSeats; }
+    public int getAvailableSeats() { return availableSeats; }
+
+    public boolean bookSeats(int count) {
+        if (count <= availableSeats) {
+            availableSeats -= count;
+            return true;
+        }
+        return false;
+    }
+
+    public abstract double calculateFare(double distance);
+}
+
+class BRTCBus extends Vehicle {
+    public BRTCBus() { super("BRTC Bus", 40, 05); }
+    @Override public double calculateFare(double distance) { return Math.max(15.0, distance * 3.5); }
+}
+
+class SakuraBus extends Vehicle {
+    public SakuraBus() { super("Sakura Paribahan", 36, 12); }
+    @Override public double calculateFare(double distance) { return Math.max(250.0, distance * 3.2); }
+}
+
+class RaidaBus extends Vehicle {
+    public RaidaBus() { super("Raida Express", 45, 25); }
+    @Override public double calculateFare(double distance) { return Math.max(10.0, distance * 2.8); }
+}
+
+class MetroRail extends Vehicle {
+    public MetroRail() { super("Rapid Metro Rail", 150, 60); }
+    @Override public double calculateFare(double distance) { return 20.0 + (distance * 3.5); }
+}
+
 class TransportRegistry {
     private static final Map<String, Map<String, Integer>> operatorRoutes = new HashMap<>();
+    private static final Map<String, Vehicle> operatorVehicles = new HashMap<>();
 
     static {
+        operatorVehicles.put("BRTC Bus", new BRTCBus());
+        operatorVehicles.put("Sakura Paribahan", new SakuraBus());
+        operatorVehicles.put("Raida Express", new RaidaBus());
+        operatorVehicles.put("Rapid Metro Rail", new MetroRail());
+
         Map<String, Integer> brtc = new HashMap<>();
         brtc.put("Uttara House Building", 0);
         brtc.put("Airport", 4);
@@ -52,6 +104,10 @@ class TransportRegistry {
         return operatorRoutes.keySet().toArray(new String[0]);
     }
 
+    public static Vehicle getVehicleForOperator(String operator) {
+        return operatorVehicles.get(operator);
+    }
+
     public static String[] getStationsForOperator(String operator) {
         if (operatorRoutes.containsKey(operator)) {
             return operatorRoutes.get(operator).keySet().toArray(new String[0]);
@@ -68,33 +124,6 @@ class TransportRegistry {
         }
         return 0;
     }
-}
-
-abstract class Vehicle {
-    private String name;
-    public Vehicle(String name) { this.name = name; }
-    public String getName() { return name; }
-    public abstract double calculateFare(double distance);
-}
-
-class BRTCBus extends Vehicle {
-    public BRTCBus() { super("BRTC Bus"); }
-    @Override public double calculateFare(double distance) { return Math.max(15.0, distance * 3.5); }
-}
-
-class SakuraBus extends Vehicle {
-    public SakuraBus() { super("Sakura Paribahan"); }
-    @Override public double calculateFare(double distance) { return Math.max(250.0, distance * 3.2); }
-}
-
-class RaidaBus extends Vehicle {
-    public RaidaBus() { super("Raida Express"); }
-    @Override public double calculateFare(double distance) { return Math.max(10.0, distance * 2.8); }
-}
-
-class MetroRail extends Vehicle {
-    public MetroRail() { super("Rapid Metro Rail"); }
-    @Override public double calculateFare(double distance) { return 20.0 + (distance * 3.5); }
 }
 
 // --- 2. Custom 5x7 Dot Matrix LED Marquee Engine with Schedules ---
@@ -204,10 +233,9 @@ class URLQRCodePanel extends JPanel {
     public URLQRCodePanel(String imageUrl) {
         setPreferredSize(new Dimension(200, 200));
         setBackground(Color.WHITE);
-        setBorder(new LineBorder(new Color(226, 19, 110), 2)); // bKash Pink Frame
+        setBorder(new LineBorder(new Color(226, 19, 110), 2));
 
         try {
-            // Directly load exact image from Britannica URL
             qrImage = ImageIO.read(URI.create(imageUrl).toURL());
         } catch (Exception e) {
             qrImage = null;
@@ -220,7 +248,6 @@ class URLQRCodePanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         if (qrImage != null) {
-            // Smoothly scale and render full image without clipping
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             int margin = 10;
             g2.drawImage(qrImage, margin, margin, getWidth() - (margin * 2), getHeight() - (margin * 2), this);
@@ -264,13 +291,93 @@ class BarcodePanel extends JPanel {
     }
 }
 
-// --- 5. Main Application GUI ---
+// --- 5. Modern Seat Status Badge UI Component ---
+class SeatStatusBadge extends JPanel {
+    private JLabel textLabel;
+    private JPanel dotIndicator;
+    private JProgressBar progressBar;
+    private JPanel badgeContainer;
+
+    public SeatStatusBadge() {
+        setLayout(new BorderLayout(8, 6));
+        setOpaque(false);
+
+        badgeContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
+        badgeContainer.setBackground(new Color(240, 253, 244)); // Light green tint
+        badgeContainer.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(new Color(187, 247, 208), 1, true),
+                new EmptyBorder(2, 8, 2, 10)
+        ));
+
+        dotIndicator = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getForeground());
+                g2.fillOval(0, 0, 8, 8);
+            }
+        };
+        dotIndicator.setPreferredSize(new Dimension(8, 8));
+        dotIndicator.setOpaque(false);
+        dotIndicator.setForeground(new Color(22, 163, 74));
+
+        textLabel = new JLabel("Available: -- / --");
+        textLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        textLabel.setForeground(new Color(21, 128, 61));
+
+        badgeContainer.add(dotIndicator);
+        badgeContainer.add(textLabel);
+
+        progressBar = new JProgressBar(0, 100);
+        progressBar.setPreferredSize(new Dimension(210, 4));
+        progressBar.setForeground(new Color(22, 163, 74));
+        progressBar.setBackground(new Color(226, 232, 240));
+        progressBar.setBorderPainted(false);
+
+        add(badgeContainer, BorderLayout.WEST);
+        add(progressBar, BorderLayout.SOUTH);
+    }
+
+    public void updateStatus(int available, int total) {
+        textLabel.setText("Available: " + available + " / " + total + " Seats");
+        int percent = (int) (((double) available / total) * 100);
+        progressBar.setValue(percent);
+
+        if (available <= 5) {
+            // Warning Alert Red Styling
+            badgeContainer.setBackground(new Color(254, 242, 242));
+            badgeContainer.setBorder(BorderFactory.createCompoundBorder(
+                    new LineBorder(new Color(254, 202, 202), 1, true),
+                    new EmptyBorder(2, 8, 2, 10)
+            ));
+            textLabel.setForeground(new Color(185, 28, 28));
+            dotIndicator.setForeground(new Color(220, 38, 38));
+            progressBar.setForeground(new Color(220, 38, 38));
+        } else {
+            // Normal Green Styling
+            badgeContainer.setBackground(new Color(240, 253, 244));
+            badgeContainer.setBorder(BorderFactory.createCompoundBorder(
+                    new LineBorder(new Color(187, 247, 208), 1, true),
+                    new EmptyBorder(2, 8, 2, 10)
+            ));
+            textLabel.setForeground(new Color(21, 128, 61));
+            dotIndicator.setForeground(new Color(22, 163, 74));
+            progressBar.setForeground(new Color(22, 163, 74));
+        }
+        repaint();
+    }
+}
+
+// --- 6. Main Application GUI ---
 public class SmartTransportApp extends JFrame {
 
     private JComboBox<String> operatorBox, startStationBox, endStationBox;
     private JTextField passengerField;
+    private SeatStatusBadge seatStatusBadge; // Custom Badge Component
     private DefaultTableModel historyTableModel;
-    
+
     private JLabel lblTicketStatus, lblTicketRef, lblTicketRoute, lblTicketFare;
 
     private final Color primaryNavy = new Color(15, 23, 42);     
@@ -289,13 +396,13 @@ public class SmartTransportApp extends JFrame {
         } catch (Exception ignored) {}
 
         setTitle("Smart Transit Kiosk Terminal - Station Kiosk #04");
-        setSize(1080, 760);
+        setSize(1080, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(0, 0));
         getContentPane().setBackground(bgLight);
 
-        // --- TOP NAVIGATION & MATRIX LED BOARD ---
+        // TOP NAVIGATION & MATRIX LED BOARD
         JPanel topContainer = new JPanel(new BorderLayout());
         topContainer.setBackground(primaryNavy);
 
@@ -318,7 +425,7 @@ public class SmartTransportApp extends JFrame {
         topContainer.add(headerWidget, BorderLayout.NORTH);
         topContainer.add(ledBoard, BorderLayout.SOUTH);
 
-        // --- MAIN WORKSPACE ---
+        // MAIN WORKSPACE
         JPanel mainWorkspace = new JPanel(new GridLayout(1, 2, 18, 0));
         mainWorkspace.setOpaque(false);
         mainWorkspace.setBorder(new EmptyBorder(15, 20, 15, 20));
@@ -333,16 +440,16 @@ public class SmartTransportApp extends JFrame {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.insets = new Insets(8, 5, 8, 5);
 
         JLabel formTitle = new JLabel("Issue Transit Ticket Pass");
         formTitle.setFont(new Font("Segoe UI", Font.BOLD, 17));
         formTitle.setForeground(textDark);
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
-        gbc.insets = new Insets(5, 5, 20, 5);
+        gbc.insets = new Insets(5, 5, 15, 5);
         formCard.add(formTitle, gbc);
         gbc.gridwidth = 1;
-        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.insets = new Insets(8, 5, 8, 5);
 
         Dimension fieldSize = new Dimension(220, 35);
 
@@ -355,10 +462,13 @@ public class SmartTransportApp extends JFrame {
         startStationBox.setPreferredSize(fieldSize);
         endStationBox = new JComboBox<>();
         endStationBox.setPreferredSize(fieldSize);
-        updateStationOptions();
 
         addFormRow(formCard, gbc, 2, "From Station:", startStationBox);
         addFormRow(formCard, gbc, 3, "To Station:", endStationBox);
+
+        // Seat Status Badge Component
+        seatStatusBadge = new SeatStatusBadge();
+        addFormRow(formCard, gbc, 4, "Seat Status:", seatStatusBadge);
 
         passengerField = new JTextField("1");
         passengerField.setPreferredSize(fieldSize);
@@ -368,13 +478,13 @@ public class SmartTransportApp extends JFrame {
                 passengerField.selectAll();
             }
         });
-        addFormRow(formCard, gbc, 4, "Passengers:", passengerField);
+        addFormRow(formCard, gbc, 5, "Passengers:", passengerField);
 
         JButton payBtn = createCustomButton("Proceed to Digital Payment", accentBlue, Color.WHITE);
         payBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         payBtn.setPreferredSize(new Dimension(0, 45));
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
-        gbc.insets = new Insets(25, 5, 5, 5);
+        gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
+        gbc.insets = new Insets(20, 5, 5, 5);
         formCard.add(payBtn, gbc);
 
         // RIGHT PANEL: Digital Display + History Log
@@ -452,14 +562,17 @@ public class SmartTransportApp extends JFrame {
         add(topContainer, BorderLayout.NORTH);
         add(mainWorkspace, BorderLayout.CENTER);
 
-        operatorBox.addActionListener(e -> updateStationOptions());
+        operatorBox.addActionListener(e -> updateStationAndSeatOptions());
         payBtn.addActionListener(e -> initiateBKashPayment());
+
+        updateStationAndSeatOptions();
     }
 
-    private void updateStationOptions() {
+    private void updateStationAndSeatOptions() {
         String selectedOperator = (String) operatorBox.getSelectedItem();
-        String[] stations = TransportRegistry.getStationsForOperator(selectedOperator);
+        if (selectedOperator == null) return;
 
+        String[] stations = TransportRegistry.getStationsForOperator(selectedOperator);
         startStationBox.removeAllItems();
         endStationBox.removeAllItems();
 
@@ -470,6 +583,15 @@ public class SmartTransportApp extends JFrame {
 
         if (stations.length > 1) {
             endStationBox.setSelectedIndex(stations.length - 1);
+        }
+
+        updateSeatLabelDisplay(selectedOperator);
+    }
+
+    private void updateSeatLabelDisplay(String operator) {
+        Vehicle vehicle = TransportRegistry.getVehicleForOperator(operator);
+        if (vehicle != null) {
+            seatStatusBadge.updateStatus(vehicle.getAvailableSeats(), vehicle.getTotalSeats());
         }
     }
 
@@ -522,22 +644,26 @@ public class SmartTransportApp extends JFrame {
             return;
         }
 
+        Vehicle vehicle = TransportRegistry.getVehicleForOperator(operator);
+
+        if (passengers > vehicle.getAvailableSeats()) {
+            lblTicketStatus.setText("● ERROR: NOT ENOUGH SEATS AVAILABLE!");
+            lblTicketStatus.setForeground(Color.RED);
+            JOptionPane.showMessageDialog(this,
+                    "দুঃখিত! " + operator + " -এ মাত্র " + vehicle.getAvailableSeats() + " টি সিট খালি আছে।",
+                    "Seat Overflow Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         double distance = TransportRegistry.calculateDistance(operator, from, to);
-        Vehicle vehicle;
-
-        if (operator.contains("BRTC")) vehicle = new BRTCBus();
-        else if (operator.contains("Sakura")) vehicle = new SakuraBus();
-        else if (operator.contains("Raida")) vehicle = new RaidaBus();
-        else vehicle = new MetroRail();
-
         double baseFare = vehicle.calculateFare(distance);
         double totalFare = baseFare * passengers;
         long ticketId = (long) (Math.random() * 90000000L) + 10000000L;
 
-        showBKashPaymentModal(ticketId, vehicle.getName(), from, to, passengers, distance, totalFare);
+        showBKashPaymentModal(ticketId, vehicle, from, to, passengers, distance, totalFare);
     }
 
-    private void showBKashPaymentModal(long ticketId, String operator, String from, String to, int passengers, double dist, double totalFare) {
+    private void showBKashPaymentModal(long ticketId, Vehicle vehicle, String from, String to, int passengers, double dist, double totalFare) {
         JDialog payDialog = new JDialog(this, "bKash Merchant Payment Gateway", true);
         payDialog.setSize(400, 520);
         payDialog.setLocationRelativeTo(this);
@@ -573,7 +699,6 @@ public class SmartTransportApp extends JFrame {
         instruction.setForeground(Color.GRAY);
         instruction.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Load Exact Web Image URL
         URLQRCodePanel qrPanel = new URLQRCodePanel(BRITANNICA_QR_URL);
         qrPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -596,27 +721,30 @@ public class SmartTransportApp extends JFrame {
 
         confirmPayBtn.addActionListener(e -> {
             payDialog.dispose();
-            completeTransaction(ticketId, operator, from, to, passengers, dist, totalFare);
+            completeTransaction(ticketId, vehicle, from, to, passengers, dist, totalFare);
         });
 
         payDialog.setVisible(true);
     }
 
-    private void completeTransaction(long ticketId, String mode, String from, String to, int passengers, double dist, double totalFare) {
+    private void completeTransaction(long ticketId, Vehicle vehicle, String from, String to, int passengers, double dist, double totalFare) {
+        vehicle.bookSeats(passengers);
+        updateSeatLabelDisplay(vehicle.getName());
+
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         String routeString = from + " -> " + to;
 
         lblTicketStatus.setText("● PAYMENT CONFIRMED [GATE OPEN]");
         lblTicketStatus.setForeground(successGreen);
         lblTicketRef.setText("Ticket Ref: #" + ticketId);
-        lblTicketRoute.setText(routeString + " (" + mode + ")");
+        lblTicketRoute.setText(routeString + " (" + vehicle.getName() + ")");
         lblTicketFare.setText("Total Fare: ৳ " + String.format("%.2f", totalFare));
 
         historyTableModel.addRow(new Object[]{
-            time, mode, routeString, passengers, "৳" + String.format("%.2f", totalFare)
+            time, vehicle.getName(), routeString, passengers, "৳" + String.format("%.2f", totalFare)
         });
 
-        showPrintTicketDialog(ticketId, mode, from, to, passengers, dist, totalFare);
+        showPrintTicketDialog(ticketId, vehicle.getName(), from, to, passengers, dist, totalFare);
     }
 
     private void showPrintTicketDialog(long ticketId, String mode, String from, String to, int count, double dist, double fare) {
@@ -626,24 +754,24 @@ public class SmartTransportApp extends JFrame {
         printDialog.setLayout(new BorderLayout());
 
         String receiptContent = String.format(
-            "   ==========================================\n" +
-            "            METRO RAPID TRANSIT PASS          \n" +
-            "                 STATION KIOSK #04            \n" +
-            "   ==========================================\n" +
-            "   Issue Time  : %s\n" +
-            "   Ticket Ref  : #%d\n" +
-            "   Payment     : bKash Merchant Pay (PAID)\n" +
-            "   ------------------------------------------\n" +
-            "   Operator    : %s\n" +
-            "   Origin      : %s\n" +
-            "   Destination : %s\n" +
-            "   Distance    : %.1f KM\n" +
-            "   Passengers  : %d\n" +
-            "   ------------------------------------------\n" +
-            "   TOTAL FARE  : ৳ %.2f (PAID)\n" +
-            "   ------------------------------------------\n" +
-            "   Status      : VALID FOR SINGLE ENTRY\n" +
-            "   ==========================================",
+            "    ==========================================\n" +
+            "                  RAPID TRANSIT PASS          \n" +
+            "                  STATION KIOSK #04            \n" +
+            "    ==========================================\n" +
+            "    Issue Time  : %s\n" +
+            "    Ticket Ref  : #%d\n" +
+            "    Payment     : bKash Merchant Pay (PAID)\n" +
+            "    ------------------------------------------\n" +
+            "    Operator    : %s\n" +
+            "    Origin      : %s\n" +
+            "    Destination : %s\n" +
+            "    Distance    : %.1f KM\n" +
+            "    Passengers  : %d\n" +
+            "    ------------------------------------------\n" +
+            "    TOTAL FARE  : ৳ %.2f (PAID)\n" +
+            "    ------------------------------------------\n" +
+            "    Status      : VALID FOR SINGLE ENTRY\n" +
+            "    ==========================================",
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
             ticketId, mode, from, to, dist, count, fare
         );
@@ -655,7 +783,7 @@ public class SmartTransportApp extends JFrame {
 
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(receiptArea, BorderLayout.CENTER);
-        
+
         BarcodePanel barcodePanel = new BarcodePanel(String.valueOf(ticketId));
         centerPanel.add(barcodePanel, BorderLayout.SOUTH);
 
