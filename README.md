@@ -2,8 +2,8 @@
 
 An interactive, Java Swing-based desktop application simulating a **Smart Public Transit Kiosk System** for managing bus and metro rail ticketing, route visualization, live status marquee, and digital bKash payments.
 
-![GitHub repo size](https://img.shields.io/github/repo-size/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME)
-![GitHub license](https://img.shields.io/github/license/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME)
+![GitHub repo size](https://img.shields.io/github/repo-size/CodewithShahriar/Smart-City-Transit-Rapid-Ticket-System.git)
+![GitHub license](https://img.shields.io/github/license/CodewithShahriar/Smart-City-Transit-Rapid-Ticket-System.git)
 ![Java Version](https://img.shields.io/badge/Java-11%2B-orange)
 
 ---
