@@ -1,98 +1,88 @@
+# 🚌 Smart Transit Kiosk Terminal
 
-# Smart City Transit & Rapid Ticket System
+An interactive, Java Swing-based desktop application simulating a **Smart Public Transit Kiosk System** for managing bus and metro rail ticketing, route visualization, live status marquee, and digital bKash payments.
 
-![Java](https://img.shields.io/badge/Java-17%2B-orange?style=for-the-badge&logo=java)
-![Swing](https://img.shields.io/badge/GUI-Java%20Swing-blue?style=for-the-badge)
-![OOP](https://img.shields.io/badge/Architecture-OOP%20Design-green?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)
-
-A real-world, interactive Java Swing application designed to simulate modern city public transport networks (such as Metro Rail and Express Bus Systems). The project highlights core **Object-Oriented Programming (OOP)** principles while delivering an intuitive, realistic Visual GUI interface for station-to-station ticketing and PIN-secured SmartCard management.
+![GitHub repo size](https://img.shields.io/github/repo-size/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME)
+![GitHub license](https://img.shields.io/github/license/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME)
+![Java Version](https://img.shields.io/badge/Java-11%2B-orange)
 
 ---
 
-## 🌟 Key Features
+## 📸 Application Previews
 
-- **🚉 Station-to-Station Routing:** Real-world station selection with automatic distance calculation between origin and destination.
-- **💳 PIN-Secured SmartCard:** Encapsulated wallet system with authentication required for recharging and transactions.
-- **🚌 Multi-Modal Transport Support:** Choose between **Rapid Metro Rail** and **AC City Bus** with dynamic fare computation.
-- **🎫 Digital Ticket Generation:** Automated ticket output with unique 8-digit Ticket IDs and live gate entry status.
-- **🎨 Modern Visual GUI:** Clean UI built using Java Swing with `Nimbus Look & Feel`.
-
----
-
-## 🏗️ Object-Oriented Programming (OOP) Architecture
-
-The core strength of this application lies in its adherence to object-oriented software design principles:
-
-| OOP Principle | Implementation Details |
-| :--- | :--- |
-| **Encapsulation** | `SmartCard` keeps fields like `balance` and `pin` private. Balance can only be modified through validated methods (`deduct` / `recharge`). |
-| **Inheritance** | Base abstract class `Vehicle` is extended by specific child classes (`Bus` and `MetroRail`). |
-| **Polymorphism** | `calculateFare(double distance)` is overridden by `Bus` and `MetroRail` to apply modal-specific fare algorithms. |
-| **Abstraction** | `StationNetwork` abstracts complex distance mapping logic away from the GUI controller logic. |
-
----
-
-## 🛠️ Tech Stack & Prerequisites
-
-- **Language:** Java (JDK 17 or higher)
-- **Framework:** Java Swing & AWT
-- **IDE:** Visual Studio Code / NetBeans / Eclipse
-- **Extensions Needed (VS Code):** Extension Pack for Java
+<div align="center">
+  
+  <h3>Main Application Interface</h3>
+  <img src="previews/main_ui.png" alt="Main Dashboard UI" width="850"/>
+  
+  <br/><br/>
+  
+  <table border="0">
+    <tr>
+      <td align="center">
+        <b>bKash Payment</b><br/>
+        <img src="previews/route_map.png" alt="Route Map" width="400"/>
+      </td>
+      <td align="center">
+        <b>Receipt</b><br/>
+        <img src="previews/payment_ticket.png" alt="Payment Modal & Ticket" width="400"/>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ---
 
-## 📁 Project Structure
+## ✨ Key Features
 
-
-```
-
-SmartTransportSystem/
-│
-├── src/
-│   └── SmartTransportApp.java     # Main application class containing GUI & OOP Model
-├── README.md                      # Project documentation
-└── .gitignore                     # Git ignore file
-
-```
+- **🎯 Smart Nearest-5 Fare Rounding:** Fare amounts are automatically rounded to the nearest multiple of 5 (e.g., ৳15, ৳25, ৳50, ৳65) for seamless cash/digital transactions.
+- **🗺️ Interactive Route Map:** Custom-drawn octilinear transit map dynamically highlighting routes, distances, and station fares based on origin and destination.
+- **📟 5x7 Dot-Matrix LED Marquee:** Real-time scrolling LED banner displaying live bus schedules and announcements.
+- **💺 Real-time Seat Availability Tracker:** Dynamic badge and progress bar showing available vs. total seats for selected transit operators.
+- **📱 bKash Merchant Payment Gateway:** Integrated QR Code payment modal for simulating quick digital ticket purchases.
+- **🎟️ Printable Digital Ticket & Barcode:** Generates a clean, formatted receipt complete with an auto-generated 1D barcode and unique transaction reference.
 
 ---
 
-## 🚀 How to Run locally
+## 🛠️ Tech Stack & Concepts Used
+
+- **Language:** Java (JDK 11 or higher)
+- **GUI Framework:** Java Swing, AWT (Custom Graphics2D, Path2D, Double Buffering)
+- **Design Concepts:** Object-Oriented Programming (Polymorphism, Inheritance, Encapsulation)
+- **External Image API:** `javax.imageio.ImageIO` with dynamic URL image rendering
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-Make sure you have JDK 17+ installed on your system. Verify by running:
+Make sure you have **Java Development Kit (JDK) 11** or higher installed on your system.
+
 ```bash
 java -version
 
 ```
 
-### Steps
+### Installation & Execution
 
 1. **Clone the repository:**
 ```bash
-git clone [https://github.com/YOUR_USERNAME/Smart-City-Transit-System.git](https://github.com/YOUR_USERNAME/Smart-City-Transit-System.git)
+git clone [https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.git)
+cd YOUR_REPO_NAME
 
 ```
 
 
-2. **Navigate to the directory:**
+2. **Compile the Java file:**
 ```bash
-cd Smart-City-Transit-System
+javac SmartTransportApp.java
 
 ```
 
 
-3. **Compile the Java source file:**
+3. **Run the application:**
 ```bash
-javac src/SmartTransportApp.java
-
-```
-
-
-4. **Run the application:**
-```bash
-java -cp src SmartTransportApp
+java SmartTransportApp
 
 ```
 
@@ -100,14 +90,19 @@ java -cp src SmartTransportApp
 
 ---
 
-## 📸 Default Credentials for Testing
+## 📂 How to Add Your Preview Images
 
-* **Default Card ID:** `MRT-883921`
-* **Default SmartCard PIN:** `1234`
-* **Initial Balance:** `৳ 150.00`
+1. Create a folder named `previews` in your project root repository.
+2. Put your screenshot images inside the `previews/` folder with the following names (or change the names inside `README.md`):
+* `main_ui.png` (Main App Screen)
+* `route_map.png` (Route Map Diagram)
+* `payment_ticket.png` (Payment Modal / Printed Ticket)
+
+
+3. Commit and push the images to GitHub!
 
 ---
 
-## 📜 License
+## 📄 License
 
-This project is open source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
+This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
