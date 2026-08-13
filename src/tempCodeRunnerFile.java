@@ -6,12 +6,11 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.geom.Path2D;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 // --- 1. OOP Core: Route Registry & Transport Models ---
@@ -38,95 +37,77 @@ abstract class Vehicle {
         return false;
     }
 
-    // Helper Method to Round to Nearest 5 (e.g., 13 -> 15, 27 -> 25)
-    protected double roundToNearestFive(double amount) {
-        return Math.round(amount / 5.0) * 5;
-    }
-
     public abstract double calculateFare(double distance);
 }
 
 class BRTCBus extends Vehicle {
     public BRTCBus() { super("BRTC Bus", 40, 18); }
-    @Override 
-    public double calculateFare(double distance) { 
-        double rawFare = Math.max(15.0, distance * 3.5); 
-        return roundToNearestFive(rawFare);
-    }
+    @Override public double calculateFare(double distance) { return Math.max(15.0, distance * 3.5); }
 }
 
 class SakuraBus extends Vehicle {
-    public SakuraBus() { super("Sakura Paribahan", 36, 4); }
-    @Override 
-    public double calculateFare(double distance) { 
-        double rawFare = Math.max(50.0, distance * 3.2); 
-        return roundToNearestFive(rawFare);
-    }
+    public SakuraBus() { super("Sakura Paribahan", 36, 12); }
+    @Override public double calculateFare(double distance) { return Math.max(250.0, distance * 3.2); }
 }
 
 class RaidaBus extends Vehicle {
     public RaidaBus() { super("Raida Express", 45, 25); }
-    @Override 
-    public double calculateFare(double distance) { 
-        double rawFare = Math.max(15.0, distance * 2.8); 
-        return roundToNearestFive(rawFare);
-    }
+    @Override public double calculateFare(double distance) { return Math.max(10.0, distance * 2.8); }
 }
 
 class MetroRail extends Vehicle {
     public MetroRail() { super("Rapid Metro Rail", 150, 60); }
-    @Override 
-    public double calculateFare(double distance) { 
-        double rawFare = 20.0 + (distance * 5.0); 
-        return roundToNearestFive(rawFare);
-    }
+    @Override public double calculateFare(double distance) { return 20.0 + (distance * 3.5); }
 }
 
 class TransportRegistry {
-    public static final String KIOSK_LOCATION = "Agargaon"; 
-
-    private static final Map<String, Map<String, Integer>> operatorRoutes = new LinkedHashMap<>();
-    private static final Map<String, Vehicle> operatorVehicles = new LinkedHashMap<>();
+    private static final Map<String, Map<String, Integer>> operatorRoutes = new HashMap<>();
+    private static final Map<String, Vehicle> operatorVehicles = new HashMap<>();
 
     static {
         operatorVehicles.put("BRTC Bus", new BRTCBus());
-        operatorVehicles.put("Rapid Metro Rail", new MetroRail());
         operatorVehicles.put("Sakura Paribahan", new SakuraBus());
         operatorVehicles.put("Raida Express", new RaidaBus());
+        operatorVehicles.put("Rapid Metro Rail", new MetroRail());
 
-        Map<String, Integer> brtc = new LinkedHashMap<>();
-        brtc.put("Agargaon", 0);
-        brtc.put("Bijoy Sarani", 2);
-        brtc.put("Farmgate", 5);
-        brtc.put("Shahabag", 9);
-        brtc.put("Motijheel", 15);
+        Map<String, Integer> brtc = new HashMap<>();
+        brtc.put("Uttara House Building", 0);
+        brtc.put("Airport", 4);
+        brtc.put("Farmgate", 14);
+        brtc.put("Motijheel", 20);
         operatorRoutes.put("BRTC Bus", brtc);
 
-        Map<String, Integer> metro = new LinkedHashMap<>();
-        metro.put("Agargaon", 0);
-        metro.put("Bijoy Sarani", 2);
-        metro.put("Farmgate", 4);
-        metro.put("Kawran Bazar", 6);
-        metro.put("Shahabag", 8);
-        metro.put("Dhaka University", 10);
-        metro.put("Bangladesh Secretariat", 12);
-        metro.put("Motijheel", 14);
-        metro.put("Kamalapur", 16);
-        operatorRoutes.put("Rapid Metro Rail", metro);
-
-        Map<String, Integer> sakura = new LinkedHashMap<>();
-        sakura.put("Barishal Terminal", 180);
+        Map<String, Integer> sakura = new HashMap<>();
+        sakura.put("Gabtoli Counter", 0);
         sakura.put("Padma Bridge Toll Gate", 45);
-        sakura.put("Agargaon", 0);
-        sakura.put("Gabtoli Counter", 8);
+        sakura.put("Barishal Terminal", 180);
         operatorRoutes.put("Sakura Paribahan", sakura);
 
-        Map<String, Integer> raida = new LinkedHashMap<>();
-        raida.put("Agargaon", 0);
+        Map<String, Integer> raida = new HashMap<>();
+        raida.put("Diabari Uttara", 0);
         raida.put("Kuril Flyover", 8);
         raida.put("Badda Link Road", 14);
         raida.put("Sayedabad", 25);
         operatorRoutes.put("Raida Express", raida);
+
+        Map<String, Integer> metro = new HashMap<>();
+        metro.put("Uttara North", 0);
+        metro.put("Uttara Center", 2);
+        metro.put("Uttara South", 4);
+        metro.put("Pallabi", 6);
+        metro.put("Mirpur 11", 8);
+        metro.put("Mirpur 10", 10);
+        metro.put("Kazipara", 12);
+        metro.put("Shewrapara", 14);
+        metro.put("Agargaon", 16);
+        metro.put("Bijoy Sarani", 18);
+        metro.put("Farmgate", 20);
+        metro.put("Kawran Bazar", 22);
+        metro.put("Shahabag", 24);
+        metro.put("Dhaka University", 26);
+        metro.put("Bangladesh Secretariate", 28);
+        metro.put("Motijheel", 30);
+        operatorRoutes.put("Rapid Metro Rail", metro);
     }
 
     public static String[] getOperators() {
@@ -161,7 +142,7 @@ class ScrollingLEDBoard extends JPanel {
     private int scrollX = 900;
     private Timer timer;
 
-    private static final Map<Character, int[]> LED_FONT = new LinkedHashMap<>();
+    private static final Map<Character, int[]> LED_FONT = new HashMap<>();
     static {
         LED_FONT.put(' ', new int[]{0x00, 0x00, 0x00, 0x00, 0x00});
         LED_FONT.put('0', new int[]{0x3E, 0x51, 0x49, 0x45, 0x3E});
@@ -260,10 +241,7 @@ class URLQRCodePanel extends JPanel {
     private BufferedImage qrImage;
 
     public URLQRCodePanel(String imageUrl) {
-        Dimension size = new Dimension(220, 220);
-        setPreferredSize(size);
-        setMaximumSize(size);
-        setMinimumSize(size);
+        setPreferredSize(new Dimension(200, 200));
         setBackground(Color.WHITE);
         setBorder(new LineBorder(new Color(226, 19, 110), 2));
 
@@ -281,23 +259,11 @@ class URLQRCodePanel extends JPanel {
 
         if (qrImage != null) {
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            int margin = 8;
-            int availWidth = getWidth() - (margin * 2);
-            int availHeight = getHeight() - (margin * 2);
-
-            int side = Math.min(availWidth, availHeight);
-            int x = (getWidth() - side) / 2;
-            int y = (getHeight() - side) / 2;
-
-            g2.drawImage(qrImage, x, y, side, side, this);
+            int margin = 10;
+            g2.drawImage(qrImage, margin, margin, getWidth() - (margin * 2), getHeight() - (margin * 2), this);
         } else {
             g2.setColor(Color.GRAY);
-            g2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-            FontMetrics fm = g2.getFontMetrics();
-            String txt = "Connecting to QR Image...";
-            g2.drawString(txt, (getWidth() - fm.stringWidth(txt)) / 2, getHeight() / 2);
+            g2.drawString("Connecting to QR Image...", 20, getHeight() / 2);
         }
     }
 }
@@ -335,24 +301,20 @@ class BarcodePanel extends JPanel {
     }
 }
 
-// --- 5. UPDATED MODERN SEAT STATUS UI COMPONENT ---
+// --- 5. Modern Seat Status Badge UI Component ---
 class SeatStatusBadge extends JPanel {
-    private JLabel availLabel;
-    private JLabel totalLabel;
+    private JLabel textLabel;
     private JPanel dotIndicator;
     private JProgressBar progressBar;
-    private JPanel availContainer;
+    private JPanel badgeContainer;
 
     public SeatStatusBadge() {
         setLayout(new BorderLayout(8, 6));
         setOpaque(false);
 
-        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        infoPanel.setOpaque(false);
-
-        availContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
-        availContainer.setBackground(new Color(240, 253, 244));
-        availContainer.setBorder(BorderFactory.createCompoundBorder(
+        badgeContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
+        badgeContainer.setBackground(new Color(240, 253, 244));
+        badgeContainer.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(new Color(187, 247, 208), 1, true),
                 new EmptyBorder(2, 8, 2, 10)
         ));
@@ -371,53 +333,44 @@ class SeatStatusBadge extends JPanel {
         dotIndicator.setOpaque(false);
         dotIndicator.setForeground(new Color(22, 163, 74));
 
-        availLabel = new JLabel("-- Available");
-        availLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        availLabel.setForeground(new Color(21, 128, 61));
+        textLabel = new JLabel("Available: -- / --");
+        textLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        textLabel.setForeground(new Color(21, 128, 61));
 
-        availContainer.add(dotIndicator);
-        availContainer.add(availLabel);
-
-        totalLabel = new JLabel("Total: -- Seats");
-        totalLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        totalLabel.setForeground(new Color(100, 116, 139));
-
-        infoPanel.add(availContainer);
-        infoPanel.add(totalLabel);
+        badgeContainer.add(dotIndicator);
+        badgeContainer.add(textLabel);
 
         progressBar = new JProgressBar(0, 100);
-        progressBar.setPreferredSize(new Dimension(220, 4));
+        progressBar.setPreferredSize(new Dimension(210, 4));
         progressBar.setForeground(new Color(22, 163, 74));
         progressBar.setBackground(new Color(226, 232, 240));
         progressBar.setBorderPainted(false);
 
-        add(infoPanel, BorderLayout.WEST);
+        add(badgeContainer, BorderLayout.WEST);
         add(progressBar, BorderLayout.SOUTH);
     }
 
     public void updateStatus(int available, int total) {
-        availLabel.setText(available + " Available");
-        totalLabel.setText("Total: " + total + " Seats");
-
+        textLabel.setText("Available: " + available + " / " + total + " Seats");
         int percent = (int) (((double) available / total) * 100);
         progressBar.setValue(percent);
 
         if (available <= 5) {
-            availContainer.setBackground(new Color(254, 242, 242));
-            availContainer.setBorder(BorderFactory.createCompoundBorder(
+            badgeContainer.setBackground(new Color(254, 242, 242));
+            badgeContainer.setBorder(BorderFactory.createCompoundBorder(
                     new LineBorder(new Color(254, 202, 202), 1, true),
                     new EmptyBorder(2, 8, 2, 10)
             ));
-            availLabel.setForeground(new Color(185, 28, 28));
+            textLabel.setForeground(new Color(185, 28, 28));
             dotIndicator.setForeground(new Color(220, 38, 38));
             progressBar.setForeground(new Color(220, 38, 38));
         } else {
-            availContainer.setBackground(new Color(240, 253, 244));
-            availContainer.setBorder(BorderFactory.createCompoundBorder(
+            badgeContainer.setBackground(new Color(240, 253, 244));
+            badgeContainer.setBorder(BorderFactory.createCompoundBorder(
                     new LineBorder(new Color(187, 247, 208), 1, true),
                     new EmptyBorder(2, 8, 2, 10)
             ));
-            availLabel.setForeground(new Color(21, 128, 61));
+            textLabel.setForeground(new Color(21, 128, 61));
             dotIndicator.setForeground(new Color(22, 163, 74));
             progressBar.setForeground(new Color(22, 163, 74));
         }
@@ -425,14 +378,14 @@ class SeatStatusBadge extends JPanel {
     }
 }
 
-// --- 6. OCTILINEAR TRANSIT ROUTE MAP PANEL ---
+// --- 6. REALISTIC DYNAMIC ROUTE MAP WITH UNIQUE CURVE PER OPERATOR ---
 class InteractiveRouteMapPanel extends JPanel {
     private String operator;
     private String startStation;
     private String endStation;
 
     public InteractiveRouteMapPanel() {
-        setBackground(Color.WHITE);
+        setBackground(new Color(248, 250, 252));
         setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(new Color(226, 232, 240), 1, true),
                 new EmptyBorder(15, 15, 15, 15)
@@ -451,7 +404,26 @@ class InteractiveRouteMapPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        // --- SUBTLE GIS MAP BACKGROUND TEXTURE ---
+        // 1. Grid Lines
+        g2.setColor(new Color(241, 245, 249));
+        for (int i = 0; i < getWidth(); i += 24) g2.drawLine(i, 0, i, getHeight());
+        for (int i = 0; i < getHeight(); i += 24) g2.drawLine(0, i, getWidth(), i);
+
+        // 2. Realistic River Vector Overlay
+        g2.setColor(new Color(226, 232, 240));
+        g2.setStroke(new BasicStroke(18, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        Path2D river = new Path2D.Double();
+        river.moveTo(getWidth() * 0.8, 0);
+        river.curveTo(getWidth() * 0.5, getHeight() * 0.35, getWidth() * 0.9, getHeight() * 0.65, getWidth() * 0.6, getHeight());
+        g2.draw(river);
+
+        // 3. Secondary Highway Roads
+        g2.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.setColor(new Color(238, 242, 246));
+        g2.drawLine(0, (int)(getHeight() * 0.3), getWidth(), (int)(getHeight() * 0.42));
+        g2.drawLine(0, (int)(getHeight() * 0.72), getWidth(), (int)(getHeight() * 0.6));
 
         if (operator == null) return;
 
@@ -459,6 +431,11 @@ class InteractiveRouteMapPanel extends JPanel {
         if (stations == null || stations.length == 0) return;
 
         int count = stations.length;
+        int startY = 40;
+        int endY = getHeight() - 40;
+        int availableHeight = endY - startY;
+        int stepY = count > 1 ? availableHeight / (count - 1) : 0;
+
         int startIdx = -1, endIdx = -1;
         for (int i = 0; i < count; i++) {
             if (stations[i].equals(startStation)) startIdx = i;
@@ -471,119 +448,107 @@ class InteractiveRouteMapPanel extends JPanel {
         int[] xPos = new int[count];
         int[] yPos = new int[count];
 
-        int panelHeight = getHeight() > 0 ? getHeight() : 600;
-        int maxAllowedStep = 105;
-        int minStep = 55;
-        
-        int stepY = count > 1 ? Math.min(maxAllowedStep, Math.max(minStep, (panelHeight - 140) / (count - 1))) : minStep;
-        int totalRouteHeight = (count - 1) * stepY;
-        int startY = Math.max(50, (panelHeight - totalRouteHeight) / 2);
+        int baseX = 100;
+        int seed = Math.abs(operator.hashCode());
 
+        // --- UNIQUE GEOMETRY GENERATOR PER OPERATOR ---
         for (int i = 0; i < count; i++) {
-            yPos[i] = startY + (i * stepY);
+            double factor = (double) i / Math.max(1, count - 1);
+            int curveOffset = 0;
 
-            if (i == 0) xPos[i] = 180;                            
-            else if (i == 1) xPos[i] = 180;                       
-            else if (i == 2) xPos[i] = 230;                        
-            else if (i == 3) xPos[i] = 230;                        
-            else if (i == 4) xPos[i] = 230;                        
-            else if (i == 5) xPos[i] = 280;                        
-            else if (i == 6) xPos[i] = 330;                        
-            else if (i == 7) xPos[i] = 380;                        
-            else xPos[i] = 380 + (i - 7) * 40;
-        }
-
-        Color metroGreen = new Color(0, 102, 68);        
-        Color activeHighlight = new Color(245, 158, 11); 
-        Color inactiveTrack = new Color(203, 213, 225);   
-
-        Path2D fullPath = new Path2D.Double();
-        fullPath.moveTo(xPos[0], yPos[0]);
-        for (int i = 1; i < count; i++) {
-            fullPath.lineTo(xPos[i], yPos[i]);
-        }
-
-        g2.setStroke(new BasicStroke(9, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2.setColor(inactiveTrack);
-        g2.draw(fullPath);
-
-        if (startIdx != -1 && endIdx != -1 && startIdx != endIdx) {
-            Path2D activePath = new Path2D.Double();
-            activePath.moveTo(xPos[minIdx], yPos[minIdx]);
-            for (int i = minIdx + 1; i <= maxIdx; i++) {
-                activePath.lineTo(xPos[i], yPos[i]);
+            if (operator.contains("Metro")) {
+                // METRO RAIL: Authentic 45-degree geometric transit turns
+                if (factor < 0.25) {
+                    curveOffset = (int) (factor * 4 * 40);
+                } else if (factor < 0.6) {
+                    curveOffset = 40;
+                } else if (factor < 0.85) {
+                    curveOffset = 40 - (int) ((factor - 0.6) / 0.25 * 60);
+                } else {
+                    curveOffset = -20;
+                }
+            } else if (operator.contains("Raida")) {
+                // RAIDA EXPRESS: Double S-curve highway drift
+                curveOffset = (int) (Math.sin(factor * Math.PI * 2.5) * 45 + Math.cos(factor * Math.PI * 1.2) * 20);
+            } else if (operator.contains("Sakura")) {
+                // SAKURA PARIBAHAN: Wide long-distance sweeping arc
+                curveOffset = (int) (Math.sin(factor * Math.PI) * 75);
+            } else {
+                // BRTC BUS & OTHERS: Unique seed-based wave pattern
+                double freq = 1.2 + (seed % 3) * 0.6;
+                int amp = 30 + (seed % 35);
+                curveOffset = (int) (Math.sin(factor * Math.PI * freq) * amp);
             }
-            g2.setStroke(new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            g2.setColor(metroGreen);
-            g2.draw(activePath);
-        } else {
-            g2.setStroke(new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            g2.setColor(metroGreen);
-            g2.draw(fullPath);
+
+            xPos[i] = baseX + curveOffset;
+            yPos[i] = startY + i * stepY;
         }
 
-        Vehicle vehicle = TransportRegistry.getVehicleForOperator(operator);
+        Color tealTrack = new Color(13, 148, 136);      // Vibrant Teal Line
+        Color inactiveTrack = new Color(148, 163, 184); // Unused Track Gray
+        Color orangeNode = new Color(245, 158, 11);     // Active Pin Orange
 
+        // Build Curved Path
+        Path2D fullTrack = new Path2D.Double();
+        fullTrack.moveTo(xPos[0], yPos[0]);
+        for (int i = 0; i < count - 1; i++) {
+            int cx1 = xPos[i];
+            int cy1 = (yPos[i] + yPos[i + 1]) / 2;
+            int cx2 = xPos[i + 1];
+            int cy2 = (yPos[i] + yPos[i + 1]) / 2;
+            fullTrack.curveTo(cx1, cy1, cx2, cy2, xPos[i + 1], yPos[i + 1]);
+        }
+
+        // 1. Draw Inactive Track
+        g2.setStroke(new BasicStroke(7, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.setColor(inactiveTrack);
+        g2.draw(fullTrack);
+
+        // 2. Draw Active Path Segment
+        if (startIdx != -1 && endIdx != -1 && startIdx != endIdx) {
+            Path2D activeTrack = new Path2D.Double();
+            activeTrack.moveTo(xPos[minIdx], yPos[minIdx]);
+            for (int i = minIdx; i < maxIdx; i++) {
+                int cx1 = xPos[i];
+                int cy1 = (yPos[i] + yPos[i + 1]) / 2;
+                int cx2 = xPos[i + 1];
+                int cy2 = (yPos[i] + yPos[i + 1]) / 2;
+                activeTrack.curveTo(cx1, cy1, cx2, cy2, xPos[i + 1], yPos[i + 1]);
+            }
+            g2.setStroke(new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2.setColor(tealTrack);
+            g2.draw(activeTrack);
+        } else {
+            g2.setStroke(new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2.setColor(tealTrack);
+            g2.draw(fullTrack);
+        }
+
+        // 3. Render Station Nodes & Text Labels
         for (int i = 0; i < count; i++) {
             boolean isStart = (i == startIdx);
             boolean isEnd = (i == endIdx);
             boolean isSelected = isStart || isEnd;
 
-            int px = xPos[i];
-            int py = yPos[i];
-            String stationName = stations[i];
-
-            g2.setStroke(new BasicStroke(3));
-            g2.setColor(metroGreen);
-            g2.drawLine(px - 22, py, px, py);
-
             if (isSelected) {
-                int nodeRadius = 22;
-                g2.setColor(activeHighlight);
-                g2.fillOval(px - nodeRadius / 2, py - nodeRadius / 2, nodeRadius, nodeRadius);
-                g2.setStroke(new BasicStroke(4));
-                g2.setColor(metroGreen);
-                g2.drawOval(px - nodeRadius / 2, py - nodeRadius / 2, nodeRadius, nodeRadius);
+                int size = 20;
+                g2.setColor(orangeNode);
+                g2.fillOval(xPos[i] - size / 2, yPos[i] - size / 2, size, size);
+                g2.setStroke(new BasicStroke(3));
+                g2.setColor(tealTrack);
+                g2.drawOval(xPos[i] - size / 2, yPos[i] - size / 2, size, size);
             } else {
-                int nodeRadius = 18;
+                int size = 14;
                 g2.setColor(Color.WHITE);
-                g2.fillOval(px - nodeRadius / 2, py - nodeRadius / 2, nodeRadius, nodeRadius);
-                g2.setStroke(new BasicStroke(4));
-                g2.setColor(metroGreen);
-                g2.drawOval(px - nodeRadius / 2, py - nodeRadius / 2, nodeRadius, nodeRadius);
+                g2.fillOval(xPos[i] - size / 2, yPos[i] - size / 2, size, size);
+                g2.setStroke(new BasicStroke(3));
+                g2.setColor(tealTrack);
+                g2.drawOval(xPos[i] - size / 2, yPos[i] - size / 2, size, size);
             }
 
+            g2.setFont(new Font("Segoe UI", isSelected ? Font.BOLD : Font.BOLD, 12));
             g2.setColor(isSelected ? new Color(15, 23, 42) : new Color(51, 65, 85));
-            g2.setFont(new Font("Segoe UI", Font.BOLD, 13));
-            FontMetrics fm = g2.getFontMetrics();
-            int nameWidth = fm.stringWidth(stationName);
-
-            g2.drawString(stationName, px - 30 - nameWidth, py + 5);
-
-            double distFromAgargaon = TransportRegistry.calculateDistance(operator, TransportRegistry.KIOSK_LOCATION, stationName);
-
-            String fareText;
-            if (stationName.equalsIgnoreCase(TransportRegistry.KIOSK_LOCATION)) {
-                fareText = "Start";
-            } else {
-                int fare = (int) Math.round(vehicle != null ? vehicle.calculateFare(distFromAgargaon) : 0);
-                fareText = fare + " ৳";
-            }
-
-            int badgeX = px + 18;
-            int badgeY = py - 13;
-            int badgeW = 60;
-            int badgeH = 26;
-
-            boolean isCurrentStation = stationName.equalsIgnoreCase(TransportRegistry.KIOSK_LOCATION);
-            g2.setColor(isCurrentStation ? activeHighlight : metroGreen);
-            g2.fill(new RoundRectangle2D.Double(badgeX, badgeY, badgeW, badgeH, 12, 12));
-
-            g2.setColor(Color.WHITE);
-            g2.setFont(new Font("Segoe UI", Font.BOLD, 11));
-            FontMetrics fmBadge = g2.getFontMetrics();
-            int textX = badgeX + (badgeW - fmBadge.stringWidth(fareText)) / 2;
-            g2.drawString(fareText, textX, badgeY + 17);
+            g2.drawString(stations[i], xPos[i] + 20, yPos[i] + 4);
         }
     }
 }
@@ -597,7 +562,7 @@ public class SmartTransportApp extends JFrame {
     private InteractiveRouteMapPanel mapPanel;
 
     private final Color primaryNavy = new Color(15, 23, 42);     
-    private final Color actionGreen = new Color(22, 163, 74);    
+    private final Color accentBlue = new Color(37, 99, 235);    
     private final Color bkashPink = new Color(226, 19, 110);    
     private final Color bgLight = new Color(241, 245, 249);     
     private final Color cardBg = Color.WHITE;
@@ -610,13 +575,14 @@ public class SmartTransportApp extends JFrame {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception ignored) {}
 
-        setTitle("Smart Transit Kiosk Terminal - Station Kiosk #04 (" + TransportRegistry.KIOSK_LOCATION + ")");
-        setSize(1080, 820);
+        setTitle("Smart Transit Kiosk Terminal - Station Kiosk #04");
+        setSize(1080, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(0, 0));
         getContentPane().setBackground(bgLight);
 
+        // TOP NAVIGATION & MATRIX LED BOARD
         JPanel topContainer = new JPanel(new BorderLayout());
         topContainer.setBackground(primaryNavy);
 
@@ -624,7 +590,7 @@ public class SmartTransportApp extends JFrame {
         headerWidget.setOpaque(false);
         headerWidget.setBorder(new EmptyBorder(12, 20, 10, 20));
 
-        JLabel appBrand = new JLabel("SMART TRANSIT KIOSK | KIOSK #04 (" + TransportRegistry.KIOSK_LOCATION + " Station)");
+        JLabel appBrand = new JLabel("SMART TRANSIT KIOSK | KIOSK #04");
         appBrand.setFont(new Font("Segoe UI", Font.BOLD, 16));
         appBrand.setForeground(Color.WHITE);
 
@@ -639,10 +605,12 @@ public class SmartTransportApp extends JFrame {
         topContainer.add(headerWidget, BorderLayout.NORTH);
         topContainer.add(ledBoard, BorderLayout.SOUTH);
 
+        // MAIN WORKSPACE
         JPanel mainWorkspace = new JPanel(new GridLayout(1, 2, 18, 0));
         mainWorkspace.setOpaque(false);
-        mainWorkspace.setBorder(new EmptyBorder(15, 20, 10, 20));
+        mainWorkspace.setBorder(new EmptyBorder(15, 20, 15, 20));
 
+        // LEFT PANEL: Booking Form
         JPanel formCard = new JPanel(new GridBagLayout());
         formCard.setBackground(cardBg);
         formCard.setBorder(BorderFactory.createCompoundBorder(
@@ -668,18 +636,14 @@ public class SmartTransportApp extends JFrame {
         String[] operators = TransportRegistry.getOperators();
         operatorBox = new JComboBox<>(operators);
         operatorBox.setPreferredSize(fieldSize);
-        operatorBox.setSelectedItem("BRTC Bus"); 
-
         addFormRow(formCard, gbc, 1, "Select Operator:", operatorBox);
 
         startStationBox = new JComboBox<>();
         startStationBox.setPreferredSize(fieldSize);
-        startStationBox.setEnabled(false); 
-
         endStationBox = new JComboBox<>();
         endStationBox.setPreferredSize(fieldSize);
 
-        addFormRow(formCard, gbc, 2, "From Station (Locked):", startStationBox);
+        addFormRow(formCard, gbc, 2, "From Station:", startStationBox);
         addFormRow(formCard, gbc, 3, "To Station:", endStationBox);
 
         seatStatusBadge = new SeatStatusBadge();
@@ -695,13 +659,14 @@ public class SmartTransportApp extends JFrame {
         });
         addFormRow(formCard, gbc, 5, "Passengers:", passengerField);
 
-        JButton payBtn = createCustomButton("Proceed to Digital Payment", actionGreen, Color.WHITE);
+        JButton payBtn = createCustomButton("Proceed to Digital Payment", accentBlue, Color.WHITE);
         payBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         payBtn.setPreferredSize(new Dimension(0, 45));
         gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
         gbc.insets = new Insets(20, 5, 5, 5);
         formCard.add(payBtn, gbc);
 
+        // RIGHT PANEL: DYNAMIC MAP PANEL
         JPanel rightContainer = new JPanel(new BorderLayout());
         rightContainer.setOpaque(false);
 
@@ -711,29 +676,10 @@ public class SmartTransportApp extends JFrame {
         mainWorkspace.add(formCard);
         mainWorkspace.add(rightContainer);
 
-        JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 8));
-        footerPanel.setBackground(primaryNavy);
-        
-        JLabel helpDeskLabel = new JLabel("Need Assistance or Inquiries?");
-        helpDeskLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        helpDeskLabel.setForeground(new Color(203, 213, 225));
-
-        JLabel phoneLabel = new JLabel("Helpline: 16247 / +880 9612-000111");
-        phoneLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        phoneLabel.setForeground(Color.WHITE);
-
-        JLabel emailLabel = new JLabel("Email: support@smarttransit.bd");
-        emailLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        emailLabel.setForeground(Color.WHITE);
-
-        footerPanel.add(helpDeskLabel);
-        footerPanel.add(phoneLabel);
-        footerPanel.add(emailLabel);
-
         add(topContainer, BorderLayout.NORTH);
         add(mainWorkspace, BorderLayout.CENTER);
-        add(footerPanel, BorderLayout.SOUTH);
 
+        // LISTENERS
         operatorBox.addActionListener(e -> updateStationAndSeatOptions());
         startStationBox.addActionListener(e -> updateMap());
         endStationBox.addActionListener(e -> updateMap());
@@ -756,10 +702,8 @@ public class SmartTransportApp extends JFrame {
             endStationBox.addItem(station);
         }
 
-        startStationBox.setSelectedItem(TransportRegistry.KIOSK_LOCATION);
-
         if (stations.length > 1) {
-            endStationBox.setSelectedIndex(1);
+            endStationBox.setSelectedIndex(stations.length - 1);
         }
 
         updateSeatLabelDisplay(selectedOperator);
@@ -814,7 +758,7 @@ public class SmartTransportApp extends JFrame {
             passengers = Integer.parseInt(passengerField.getText().trim());
             if (passengers <= 0) throw new NumberFormatException();
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid passenger count!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "দয়া করে সঠিক যাত্রীর সংখ্যা লিখুন!", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -823,7 +767,7 @@ public class SmartTransportApp extends JFrame {
         String to = (String) endStationBox.getSelectedItem();
 
         if (from == null || to == null || from.equals(to)) {
-            JOptionPane.showMessageDialog(this, "Source and Destination cannot be the same!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "সোর্স ও ডেস্টিনেশন একই হতে পারবে না!", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -831,7 +775,7 @@ public class SmartTransportApp extends JFrame {
 
         if (passengers > vehicle.getAvailableSeats()) {
             JOptionPane.showMessageDialog(this,
-                    "Sorry! " + operator + " has only " + vehicle.getAvailableSeats() + " seats available.",
+                    "দুঃখিত! " + operator + " -এ মাত্র " + vehicle.getAvailableSeats() + " টি সিট খালি আছে।",
                     "Seat Overflow Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -846,7 +790,7 @@ public class SmartTransportApp extends JFrame {
 
     private void showBKashPaymentModal(long ticketId, Vehicle vehicle, String from, String to, int passengers, double dist, double totalFare) {
         JDialog payDialog = new JDialog(this, "bKash Merchant Payment Gateway", true);
-        payDialog.setSize(420, 540);
+        payDialog.setSize(400, 520);
         payDialog.setLocationRelativeTo(this);
         payDialog.setLayout(new BorderLayout());
 
@@ -885,7 +829,7 @@ public class SmartTransportApp extends JFrame {
 
         JButton confirmPayBtn = createCustomButton("Confirm & Complete Payment", bkashPink, Color.WHITE);
         confirmPayBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        confirmPayBtn.setPreferredSize(new Dimension(320, 44));
+        confirmPayBtn.setPreferredSize(new Dimension(300, 44));
         confirmPayBtn.setMaximumSize(new Dimension(340, 44));
         confirmPayBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -955,7 +899,7 @@ public class SmartTransportApp extends JFrame {
         centerPanel.add(barcodePanel, BorderLayout.SOUTH);
 
         JPanel btnPanel = new JPanel(new FlowLayout());
-        JButton printBtn = createCustomButton("Save PDF & Print", actionGreen, Color.WHITE);
+        JButton printBtn = createCustomButton("Save PDF & Print", accentBlue, Color.WHITE);
         JButton closeBtn = createCustomButton("Close", Color.GRAY, Color.WHITE);
 
         printBtn.addActionListener(e -> {
