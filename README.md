@@ -84,23 +84,6 @@ javac SmartTransportApp.java
 ```bash
 java SmartTransportApp
 
-```
-
-
-
----
-
-## 📂 How to Add Your Preview Images
-
-1. Create a folder named `previews` in your project root repository.
-2. Put your screenshot images inside the `previews/` folder with the following names (or change the names inside `README.md`):
-* `main_ui.png` (Main App Screen)
-* `route_map.png` (Route Map Diagram)
-* `payment_ticket.png` (Payment Modal / Printed Ticket)
-
-
-3. Commit and push the images to GitHub!
-
 ---
 
 ## 📄 License
